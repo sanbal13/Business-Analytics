@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import dashboardRouter from './routes/dashboardRouter.js';
+import studentsRouter from './routes/studentsRouter.js';
 
 dotenv.config();
 
@@ -13,9 +14,17 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
-// mongoose.connect(process.env.MONGO_URI);
+const mongoURI = process.env.MONGODB_URI;
+
+mongoose.connect(mongoURI)
+.then(() => {console.log('Connected to MongoDB')})
+.catch((error) => { 
+    console.error('Error connecting to MongoDB: ', error);
+
+});
 
 app.use('/', dashboardRouter);
+app.use('/students', studentsRouter);
 
 const PORT = 5005;
 
